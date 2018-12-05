@@ -1,0 +1,37 @@
+TODO: pretty much everything
+
+This will be a classic multiplayer game of chess written with nodejs using sockets
+
+## THE SERVER
+
+The server will pair two players in one instance of the game
+during an instance the server shall follow the folowing main loop:
+1. Recive a movement command from the current player
+2. Check if the command is valid given the current state (the bulk of the logic)
+a) if its not send a message to the player that the command was rejected and do nothing
+b) if the command is valid, send it to both players and update the state
+3. Give the turn to the next player
+
+Internally the table should be kept as a two dimensional array of integers, where 0 denotes an empty space and every chess piece corresponds to 
+a certian number (e.g white pawns can be 1, white king 2 etc...)
+
+## THE PROTOCOL
+# CLIENT->SERVER
+From client to server it should be a string of size 4 that describes from where to where in classic chess fashion
+When a clients aborts the game it should send a message "EXIT"
+Further messages may need to be added in the future, but if possible they should all be 4 bytes
+The messages of a client who is not on turn should be ignored (unless its a exit message)
+# SERVER->CLIENT
+From server to client: on connection the client should recieve a two dimensional array with the initial state of the board
+Beforehand it would be a good idea to send the dimensions of the actual board, as this would allow to modify the server to support more exotic chess rules
+without having to modify the client much/at all
+The server should send a message with the last move to both players on every update of the table state
+When a server rejects a movement from the client it should send back a message "REJC" (ideally keep it 4 bytes)
+
+## THE CLIENT
+dunno lol
+it draws a board based on the first message from the server
+it allows the user to drag and drop or click and click on figures and translates that to a message to send to the server
+it redraws the board when the server sends an update
+
+ALL OF THE ABOVE ARE SUBJECT TO CHANGE
