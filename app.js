@@ -5,9 +5,18 @@ var express = require("express");
 var port = process.argv[2];
 
 var app = express();
+app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/client"));
 
 var server = http.createServer(app);
+
+var numLobbys = 0;
+
+app.get("/create", function (req, res) {
+	let newLobbyID = ++numLobbys;
+	res.render("create.ejs", {id: newLobbyID} );
+	console.log("New lobby with id " + newLobbyID);
+});
 
 app.get("/", function (req, res) {
 	res.render("index.html");
