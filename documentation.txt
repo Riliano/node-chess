@@ -4,8 +4,14 @@ This will be a classic multiplayer game of chess written with nodejs using socke
 
 ## THE SERVER
 
-The server will pair two players in one instance of the game
-during an instance the server shall follow the folowing main loop:
+The server will create a lobby with a maximum size: the first two players will play the game 
+while the rest will be spectators.
+A client should be able to send a message to the server, requesting a new lobby, the server should respond with a lobby id 
+and the client shall be assigned as white player.
+Anyone who knows the id can join the lobby, wheres the first person that joins will be assigned as black player and everyone else
+will be a spectator.
+
+During an instance the server shall follow the folowing main loop:
 1. Recive a movement command from the current player
 2. Check if the command is valid given the current state (the bulk of the logic)
 a) if its not send a message to the player that the command was rejected and do nothing
@@ -19,13 +25,14 @@ a certian number (e.g white pawns can be 1, white king 2 etc...)
 # CLIENT->SERVER
 From client to server it should be a string of size 4 that describes from where to where in classic chess fashion
 When a clients aborts the game it should send a message "EXIT"
+When a client wants to request creation of lobby it should send a message "NEWL"
 Further messages may need to be added in the future, but if possible they should all be 4 bytes
 The messages of a client who is not on turn should be ignored (unless its a exit message)
 # SERVER->CLIENT
-From server to client: on connection the client should recieve a two dimensional array with the initial state of the board
-Beforehand it would be a good idea to send the dimensions of the actual board, as this would allow to modify the server to support more exotic chess rules
-without having to modify the client much/at all
-The server should send a message with the last move to both players on every update of the table state
+When a client requests a lobby creation it should recieve back an positive integer which is the lobby id or a negative error code
+When a client joins a lobby it should recieve a message "BLCK" when the client is the black player or "SPCT" when the client is a spectator
+Afterwards the client will recive two integers and afterwards a two dimensional array with this size.
+The server should send a message with the last move to all clients on every update of the table state
 When a server rejects a movement from the client it should send back a message "REJC" (ideally keep it 4 bytes)
 
 ## THE CLIENT
