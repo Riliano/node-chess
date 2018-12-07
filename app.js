@@ -2,8 +2,7 @@ var url = require("url");
 var http = require("http");
 var express = require("express");
 
-//var port = process.argv[2];
-var port = 1234;
+var port = process.argv[2];
 
 var app = express();
 app.use(express.static(__dirname + "/client"));
