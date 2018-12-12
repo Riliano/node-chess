@@ -7,6 +7,7 @@
 		<!-- Temporary -->
 		<script>
 			var socket = new WebSocket("ws://localhost:3320");
+			socket.onopen = function(){socket.send("<%= id%>");};
 			let spammer = setInterval(function(){ socket.send("Hello <%= id%>"); }, 500);
 		</script>
 		<main>

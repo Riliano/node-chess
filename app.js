@@ -17,6 +17,10 @@ const wss = new ws.Server({server});
 var numLobbys = 0;
 var allLobbys = [];
 
+let isNaN = function(x) {
+	return x!= x; //stupid js nan check
+}
+
 app.get("/create", function (req, res) {
 	allLobbys.push(new lobby(numLobbys));
 	let newLobbyID = numLobbys;
@@ -27,7 +31,7 @@ app.get("/create", function (req, res) {
 
 app.get("/join/:id", function (req, res) {
 	var id = parseInt(req.params.id);
-	if (id != id) //stupid js nan check
+	if (isNaN(id))
 	{
 		res.render("invalid.ejs", {id: req.params.id});
 		return;
@@ -55,9 +59,21 @@ app.get("/", function (req, res) {
 wss.on("connection", function (socket) {
 	console.log("new socket connection");
 
-	socket.on("message", function incoming(message) {
+	let stat = -1;
+	let lobbyID = -1;
 
-		console.log("[MSG] "+socket.id+": "+message);
+	socket.on("message", function incoming(message) {
+		if (stat === -1) {
+			console.log("Hi "+message);
+			lobbyID = parseInt(message);
+			if (!isNaN(lobbyID)) {
+				stat = 0;
+			}
+		}
+
+		if (stat === 0) {
+			console.log("[MSG] "+": "+message);
+		}
 	});
 	
 });
