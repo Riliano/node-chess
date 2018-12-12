@@ -54,6 +54,11 @@ app.get("/", function (req, res) {
 
 wss.on("connection", function (socket) {
 	console.log("new socket connection");
+
+	socket.on("message", function incoming(message) {
+
+		console.log("[MSG] "+socket.id+": "+message);
+	});
 	
 });
 
