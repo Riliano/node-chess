@@ -77,6 +77,9 @@ wss.on("connection", function (socket) {
 
 		if (stat === 0) {
 			console.log("[MSG] "+clientID+"@"+lobbyNo+": "+message);
+			for (let i=0;i<allLobbys[lobbyNo].clients.length;i++) {
+				allLobbys[lobbyNo].clients[i].send("Hello from server: "+i);
+			}
 		}
 	});
 	
