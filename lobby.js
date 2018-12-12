@@ -12,18 +12,6 @@ var lobby = function (myID)
 	this.currentPlayerTurn = 0;
 };
 
-/* Adds the given socket as a new client and returns the new number of clients */
-/*
-lobby.prototype.addClient = function (newClientID)
-{
-	console.log("New client in lobby No: " + this.id);
-	//TODO error checking, implement maxClientSize
-
-	this.clients[this.clientsSize] = newClientID;
-	this.clientsSize++;
-	return this.clientsSize;
-};*/
-
 lobby.prototype.getLobbySize = function () {return this.clients.length;};
 lobby.prototype.getID = function() {return this.id;};
 
