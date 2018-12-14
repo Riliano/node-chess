@@ -2,18 +2,61 @@
 <html>
 	<head>
 		<title>Lobby</title>
+<style>
+.cell {
+	float: left;
+	height: 50px;
+	width: 50px;
+	left: 30px;
+	border: 1px solid black;
+	background-color: white;
+	opacity: 0.5;
+}
+.cell:nth-child(2n) {
+	background-color: #030303;
+}
+.cell:nth-child(2n+1) {
+	background-color: #aaaaaa;
+}
+.cell:hover {
+	opacity: 0.95;
+}
+
+</style>
 	</head>
 	<body>
 		<!-- Temporary -->
+
+		<main>
+			<h3> You have found lobby with id: <%= id%> </h3>
+			<div class="board">
+			</div>
+		</main>
 		<script>
 			var socket = new WebSocket("ws://localhost:3320");
 			socket.onopen = function(){socket.send("<%= id%>");};
-			socket.onmessage = function(message){console.log(message);};
+
+			let stat = -1;
+			let board = null;
+			var boardDiv = document.querySelector(".board");
+			socket.onmessage = function(message){
+				if (stat == -1) {
+					board = JSON.parse(message.data);
+					boardDiv.style.width = (board.width+1)*50 + "px";
+					for (let y = 0; y < board.height; y++) {
+						for (let x=0; x < board.width; x++) {
+							let cell = document.createElement('div');
+							cell.className = "cell";
+							boardDiv.appendChild(cell);
+						}
+						if (board.width%2 === 0) //padding to preserve checkboard
+							boardDiv.appendChild(document.createElement('br'));
+					}
+				}
+				console.log(message);
+			};
 			let spammer = setInterval(function(){ socket.send("Hello <%= id%>"); }, 500);
 		</script>
-		<main>
-			<h3> You have found lobby with id: <%= id%> </h3>
-		</main>
 	</body>
 
 </html>
