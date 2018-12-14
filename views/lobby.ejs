@@ -39,6 +39,7 @@
 			let stat = -1;
 			let board = null;
 			var boardDiv = document.querySelector(".board");
+			var msg = "";
 			socket.onmessage = function(message){
 				if (stat == -1) {
 					board = JSON.parse(message.data);
@@ -47,6 +48,15 @@
 						for (let x=0; x < board.width; x++) {
 							let cell = document.createElement('div');
 							cell.className = "cell";
+							cell.onclick = function(){
+								msg = msg + String.fromCharCode(97+y) + x; //97 is 'a'
+								if (msg.length === 4) {
+									console.log(msg);
+									socket.send(msg);
+									msg = "";
+								}
+
+							};
 							boardDiv.appendChild(cell);
 						}
 						if (board.width%2 === 0) //padding to preserve checkboard
