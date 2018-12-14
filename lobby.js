@@ -21,7 +21,7 @@ lobby.prototype.insertClient = function(newClient) {
 	this.clients.set(newClientID, newClient);
 	switch(newClientID) {
 		case 0: newClient.send("WHTE");break; // notify 1st client that he's white
-		case 1: newClient.send("BLCK");break; // notify 2nd client that he's white
+		case 1: newClient.send("BLCK");break; // notify 2nd client that he's black
 		default: newClient.send("SPEC");break; // notify everyone else that its spectator
 	}
 	return newClientID;
@@ -36,8 +36,19 @@ lobby.prototype.broadcast = function(message) {
 	}
 }
 
-lobby.prototype.checkMessageValidity = function(message) { //TODO
-	return true;
+lobby.prototype.checkMessageValidity = function(message) {
+	// Message must be a string of format [a-g][1-8][a-g][1-8]
+	if (typeof message !== "string")
+		return false;
+	if (message.length !== 4)
+		return false;
+	let chars = message.split('');
+	let checkLetter = function(c){return 'a' <= c && c <= 'g';};
+	let checkNumber = function(c){return '0' <= c && c <= '8';};
+	return checkLetter(chars[0])
+		&& checkNumber(chars[1])
+		&& checkLetter(chars[2])
+		&& checkNumber(chars[3]);
 }
 lobby.prototype.checkMoveValidity = function(message, senderID) { //TODO
 	// Check if there are two players
