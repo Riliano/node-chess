@@ -18,12 +18,19 @@ lobby.prototype.getID = function() {return this.id;};
 
 lobby.prototype.insertClient = function(newClient) {
 	let newClientID = this.nextClientID++;
+	let firstMessage = {
+		width: this.tableWidth,
+		height: this.tableHeight,
+		table: this.table
+	};
 	this.clients.set(newClientID, newClient);
 	switch(newClientID) {
-		case 0: newClient.send("WHTE");break; // notify 1st client that he's white
-		case 1: newClient.send("BLCK");break; // notify 2nd client that he's black
-		default: newClient.send("SPEC");break; // notify everyone else that its spectator
+		case 0: firstMessage.role="WHTE";break; // notify 1st client that he's white
+		case 1: firstMessage.role="BLCK";break; // notify 2nd client that he's black
+		default: firstMessage.role="SPEC";break; // notify everyone else that its spectator
 	}
+
+	newClient.send(JSON.stringify(firstMessage));
 	return newClientID;
 };
 lobby.prototype.removeClient = function(clientID) {
