@@ -14,15 +14,16 @@ app.use(express.static(__dirname + "/client"));
 var server = http.createServer(app);
 const wss = new ws.Server({server});
 
-var allLobbys = [];
+var allLobbys = new Map();
+var nextLobbyID = 0;
 
 let isNaN = function(x) {
-	return x!= x; //stupid js nan check
+	return x!== x; //stupid js NaN check
 }
 
 app.get("/create", function (req, res) {
-	let newLobbyID = allLobbys.length;
-	allLobbys.push(new lobby(allLobbys.length));
+	let newLobbyID = nextLobbyID++; 
+	allLobbys.set(newLobbyID, new lobby(newLobbyID));
 	res.render("create.ejs", {id: newLobbyID} );
 	console.log("New lobby with id " + newLobbyID);
 });
@@ -33,12 +34,10 @@ app.get("/join/:id", function (req, res) {
 		res.render("invalid.ejs", {id: req.params.id});
 		return;
 	}
-	for (let i=0;i<allLobbys.length;i++) {
-		if (id == allLobbys[i].getID()) {
-			console.log("User found a lobby");
-			res.render("lobby.ejs", {id: id});
-			return;
-		}
+	if (allLobbys.has(id)) {
+		console.log("User found a lobby");
+		res.render("lobby.ejs", {id: id});
+		return;
 	}
 
 	res.render("invalid.ejs", {id: req.params.id});
@@ -54,7 +53,6 @@ wss.on("connection", function (socket) {
 
 	let stat = -1;
 	let lobbyID = -1;
-	let lobbyNo = -1; //position in allLobbyArray
 	let clientID = -1; //position in the lobby
 
 	socket.on("message", function incoming(message) {
@@ -63,32 +61,26 @@ wss.on("connection", function (socket) {
 			lobbyID = parseInt(message);
 
 			if (!isNaN(lobbyID)) {
-				for (let i=0;i<allLobbys.length;i++) {
-					if (lobbyID === allLobbys[i].id) {
-						stat = 0;
-						lobbyNo = i;
-						clientID = allLobbys[lobbyNo].insertClient(socket);
-						break;
-					}
+				if (allLobbys.has(lobbyID)) {
+					stat = 0;
+					clientID = allLobbys.get(lobbyID).insertClient(socket);
 				}
-						
 			}
 		}
 
 		if (stat === 0) {
-			console.log("[MSG] "+clientID+"@"+lobbyNo+": "+message+" ("+allLobbys[lobbyNo].getLobbySize()+")");
-			allLobbys[lobbyNo].broadcast("Hello server! I'm "+clientID);
+			console.log("[MSG] "+clientID+"@"+lobbyID+": "+message+" ("+allLobbys.get(lobbyID).getLobbySize()+")");
+			allLobbys.get(lobbyID).broadcast("Hello server! I'm "+clientID);
 		}
 	});
 
 	socket.on("close", function (code) {
 		console.log("close code from "+lobbyID+"@"+clientID+": "+code);
 		if (code == "1001" && stat !== -1) {
-			allLobbys[lobbyNo].removeClient(clientID);
+			allLobbys.get(lobbyID).removeClient(clientID);
 		}
 		stat = -1;
 	});
-	
 });
 
 server.listen(port, function() {console.log("Listening on: "+port);});
