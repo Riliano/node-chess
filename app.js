@@ -76,11 +76,17 @@ wss.on("connection", function (socket) {
 		}
 
 		if (stat === 0) {
-			console.log("[MSG] "+clientID+"@"+lobbyNo+": "+message);
-			for (let i=0;i<allLobbys[lobbyNo].clients.length;i++) {
-				allLobbys[lobbyNo].clients[i].send("Hello from server: "+i);
-			}
+			console.log("[MSG] "+clientID+"@"+lobbyNo+": "+message+" ("+allLobbys[lobbyNo].getLobbySize()+")");
+			allLobbys[lobbyNo].broadcast("Hello server! I'm "+clientID);
 		}
+	});
+
+	socket.on("close", function (code) {
+		console.log("close code from "+lobbyID+"@"+clientID+": "+code);
+		if (code == "1001" && stat !== -1) {
+			allLobbys[lobbyNo].removeClient(clientID);
+		}
+		stat = -1;
 	});
 	
 });

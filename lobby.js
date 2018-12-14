@@ -3,7 +3,8 @@
 var lobby = function (myID)
 {
 	this.id = myID;
-	this.clients = [];
+	this.clients = new Map(); //Key: Integer, Value: Socket
+	this.nextClientID = 0;
 	//white is always position 0, black is position 1
 //	this.maxClientSize = 150;//replace with default constatns (implement in the future)
 	this.tableWidth = 8; //replace with default constatns
@@ -12,12 +13,23 @@ var lobby = function (myID)
 	this.currentPlayerTurn = 0;
 };
 
-lobby.prototype.getLobbySize = function () {return this.clients.length;};
+lobby.prototype.getLobbySize = function () {return this.clients.size;};
 lobby.prototype.getID = function() {return this.id;};
 
 lobby.prototype.insertClient = function(newClient) {
-	return this.clients.push(newClient) - 1; //push new client on the back and return its position
+	let newClientID = this.nextClientID++;
+	this.clients.set(newClientID, newClient);
+	return newClientID;
 };
+lobby.prototype.removeClient = function(clientID) {
+	this.clients.delete(clientID);
+}
+
+lobby.prototype.broadcast = function(message) {
+	for (let socket of this.clients.values()) {
+		socket.send(message);
+	}
+}
 
 //lobby.prototype.executeMessage = function (senderID, message) {};
 
