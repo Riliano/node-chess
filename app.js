@@ -71,8 +71,11 @@ wss.on("connection", function (socket) {
 		}
 
 		if (stat === 0) {
-			console.log("[MSG] "+clientID+"@"+lobbyID+": "+message+" ("+localLobby.getLobbySize()+")");
-			localLobby.broadcast("Hello server! I'm "+clientID);
+			if (localLobby.checkMoveValidity(message, clientID)) {
+				localLobby.executeMove(message);
+				localLobby.broadcast(message);
+				console.log("[MSG] "+clientID+"@"+lobbyID+": "+message);
+			}
 		}
 	});
 

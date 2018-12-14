@@ -19,6 +19,11 @@ lobby.prototype.getID = function() {return this.id;};
 lobby.prototype.insertClient = function(newClient) {
 	let newClientID = this.nextClientID++;
 	this.clients.set(newClientID, newClient);
+	switch(newClientID) {
+		case 0: newClient.send("WHTE");break; // notify 1st client that he's white
+		case 1: newClient.send("BLCK");break; // notify 2nd client that he's white
+		default: newClient.send("SPEC");break; // notify everyone else that its spectator
+	}
 	return newClientID;
 };
 lobby.prototype.removeClient = function(clientID) {
@@ -31,6 +36,24 @@ lobby.prototype.broadcast = function(message) {
 	}
 }
 
+lobby.prototype.checkMessageValidity = function(message) { //TODO
+	return true;
+}
+lobby.prototype.checkMoveValidity = function(message, senderID) { //TODO
+	// Check if there are two players
+	if (this.nextClientID < 2)
+		return false;
+	// Check if its the player's turn
+	if (this.currentPlayerTurn !== senderID)
+		return false;
+	if (!this.checkMessageValidity(message))
+		return false
+	return true;
+}
+lobby.prototype.executeMove = function(move) {
+
+	this.currentPlayerTurn = (this.currentPlayerTurn+1)%2;
+}
 //lobby.prototype.executeMessage = function (senderID, message) {};
 
 module.exports = lobby;
