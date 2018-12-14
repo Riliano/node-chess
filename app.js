@@ -54,6 +54,7 @@ wss.on("connection", function (socket) {
 	let stat = -1;
 	let lobbyID = -1;
 	let clientID = -1; //position in the lobby
+	let localLobby = null;
 
 	socket.on("message", function incoming(message) {
 		if (stat === -1) {
@@ -63,21 +64,22 @@ wss.on("connection", function (socket) {
 			if (!isNaN(lobbyID)) {
 				if (allLobbys.has(lobbyID)) {
 					stat = 0;
-					clientID = allLobbys.get(lobbyID).insertClient(socket);
+					localLobby = allLobbys.get(lobbyID);
+					clientID = localLobby.insertClient(socket);
 				}
 			}
 		}
 
 		if (stat === 0) {
-			console.log("[MSG] "+clientID+"@"+lobbyID+": "+message+" ("+allLobbys.get(lobbyID).getLobbySize()+")");
-			allLobbys.get(lobbyID).broadcast("Hello server! I'm "+clientID);
+			console.log("[MSG] "+clientID+"@"+lobbyID+": "+message+" ("+localLobby.getLobbySize()+")");
+			localLobby.broadcast("Hello server! I'm "+clientID);
 		}
 	});
 
 	socket.on("close", function (code) {
 		console.log("close code from "+lobbyID+"@"+clientID+": "+code);
 		if (code == "1001" && stat !== -1) {
-			allLobbys.get(lobbyID).removeClient(clientID);
+			localLobby.removeClient(clientID);
 		}
 		stat = -1;
 	});
