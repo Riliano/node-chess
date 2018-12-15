@@ -39,7 +39,6 @@
 			const INITIALIZED = 0;
 			var socket = new WebSocket("ws://localhost:3320");
 			socket.onopen = function(){socket.send("<%= id%>");};
-
 			let stat = UNINITIALIZED;
 			let board = null;
 			var boardDiv = document.querySelector(".board");
@@ -53,8 +52,10 @@
 						for (let x=0; x < board.width; x++) {
 							let cell = document.createElement('div');
 							cell.className = "cell";
+							let idStr = "" + String.fromCharCode(CHAR_CODE_a+x) + (board.height-y);
+							cell.setAttribute("id", idStr);
 							cell.onclick = function(){
-								msg = msg + String.fromCharCode(CHAR_CODE_a+x) + (8-y);
+								msg = msg + idStr;
 								if (msg.length === MV_MSG_LEN){
 									console.log("Trying to move: "+msg);
 									if (stat === INITIALIZED)
@@ -76,7 +77,6 @@
 					console.log("Have to move: "+message.data);
 				}
 			};
-			let spammer = setInterval(function(){ socket.send("Hello <%= id%>"); }, 500);
 		</script>
 	</body>
 
