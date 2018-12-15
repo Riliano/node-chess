@@ -41,7 +41,7 @@
 			var boardDiv = document.querySelector(".board");
 			var msg = "";
 			socket.onmessage = function(message){
-				if (stat == -1) {
+				if (stat === -1) {
 					board = JSON.parse(message.data);
 					boardDiv.style.width = (board.width+1)*50 + "px";
 					for (let y = 0; y < board.height; y++) {
@@ -50,8 +50,8 @@
 							cell.className = "cell";
 							cell.onclick = function(){
 								msg = msg + String.fromCharCode(97+y) + x; //97 is 'a'
-								if (msg.length === 4) {
-									console.log(msg);
+								if (msg.length === 4 && stat === 0) {
+									console.log("Trying to move: "+msg);
 									socket.send(msg);
 									msg = "";
 								}
@@ -62,8 +62,10 @@
 						if (board.width%2 === 0) //padding to preserve checkboard
 							boardDiv.appendChild(document.createElement('br'));
 					}
+					stat = 0;
+				} else if (stat === 0) {
+					console.log("Have to move: "+message.data);
 				}
-				console.log(message);
 			};
 			let spammer = setInterval(function(){ socket.send("Hello <%= id%>"); }, 500);
 		</script>
