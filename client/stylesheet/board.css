@@ -16,3 +16,57 @@
 .cell:hover {
 	opacity: 0.95;
 }
+.piece {
+	width: 52px;
+	height: 52px;
+}
+
+#white_king {
+	background: url(/chess_pieces.png) 0px 0px;
+	background-size: 312px 104px;
+}
+#white_queen {
+	background: url(/chess_pieces.png) -52px 0px;
+	background-size: 312px 104px;
+}
+#white_bishop {
+	background: url(/chess_pieces.png) -104 0px;
+	background-size: 312px 104px;
+}
+#white_knight {
+	background: url(/chess_pieces.png) -156px 0px;
+	background-size: 312px 104px;
+}
+#white_rook {
+	background: url(/chess_pieces.png) -208px 0px;
+	background-size: 312px 104px;
+}
+#white_pawn {
+	background: url(/chess_pieces.png) -262px 0px;
+	background-size: 312px 104px;
+}
+
+#black_king {
+	background: url(/chess_pieces.png) -52px 0px;
+	background-size: 312px 104px;
+}
+#black_queen {
+	background: url(/chess_pieces.png) -52px -52px;
+	background-size: 312px 104px;
+}
+#black_bishop {
+	background: url(/chess_pieces.png) -104 -52px;
+	background-size: 312px 104px;
+}
+#black_knight {
+	background: url(/chess_pieces.png) -156px -52px;
+	background-size: 312px 104px;
+}
+#black_rook {
+	background: url(/chess_pieces.png) -208px -52px;
+	background-size: 312px 104px;
+}
+#black_pawn {
+	background: url(/chess_pieces.png) -262px -52px;
+	background-size: 312px 104px;
+}
