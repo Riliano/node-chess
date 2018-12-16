@@ -111,6 +111,7 @@ lobby.prototype.checkMoveValidity = function(move, senderID) { //TODO
 	switch (Math.abs(this.table[y1][x1])) {
 		case WHITE_PAWN: return this.checkPawn(x1, y1, x2, y2);
 		case WHITE_ROOK: return this.checkRook(x1, y1, x2, y2);
+		case WHITE_BISHOP: return this.checkBishop(x1, y1, x2, y2);
 		default: break;
 	};
 
@@ -139,7 +140,6 @@ lobby.prototype.checkLine = function(x1, y1, x2, y2, stepx, stepy) {
 	let tx = x1+stepx
 	let ty = y1+stepy;
 	while (this.inBoard(tx, ty) && this.table[ty][tx] === 0) {
-		console.log("looping");
 		if (ty === y2 && tx === x2)
 			return true;
 		tx += stepx;
@@ -182,7 +182,6 @@ lobby.prototype.checkPawn = function (x1, y1, x2, y2) {
 }
 lobby.prototype.checkRook = function (x1, y1, x2, y2) {
 	let tx = x1, ty = y1;
-	console.log(x1, y1, x2, y2);
 
 	if (tx !== x2 && ty !== y2) // Not a + line
 		return false;
@@ -191,6 +190,17 @@ lobby.prototype.checkRook = function (x1, y1, x2, y2) {
 		|| this.checkLine(x1, y1, x2, y2, 0, -1)
 		|| this.checkLine(x1, y1, x2, y2, 1, 0)
 		|| this.checkLine(x1, y1, x2, y2, -1, 0);
+}
+lobby.prototype.checkBishop = function (x1, y1, x2, y2) {
+	let tx = x1, ty = y1;
+
+	if (Math.abs(x2-tx) !== Math.abs(y2-ty)) // Not a X line
+		return false;
+
+	return this.checkLine(x1, y1, x2, y2, 1, 1)
+		|| this.checkLine(x1, y1, x2, y2, 1, -1)
+		|| this.checkLine(x1, y1, x2, y2, -1, 1)
+		|| this.checkLine(x1, y1, x2, y2, -1, -1);
 }
 
 module.exports = lobby;
