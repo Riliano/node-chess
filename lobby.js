@@ -110,6 +110,7 @@ lobby.prototype.checkMoveValidity = function(move, senderID) { //TODO
 
 	switch (Math.abs(this.table[y1][x1])) {
 		case WHITE_PAWN: return this.checkPawn(x1, y1, x2, y2);
+		case WHITE_ROOK: return this.checkRook(x1, y1, x2, y2);
 		default: break;
 	};
 
@@ -155,6 +156,54 @@ lobby.prototype.checkPawn = function (x1, y1, x2, y2) {
 	// TODO Check if the move will cause a check
 
 	// couldn't find a valid move
+	return false;
+}
+lobby.prototype.checkRook = function (x1, y1, x2, y2) {
+	let tx = x1, ty = y1;
+	if (tx === x2) {
+		// Try up and down
+		let step = 1;
+		for (let i=0;i<2;i++)
+		{
+			ty += step;
+			while ((ty >= 0 && ty <= this.tableHeight) && this.table[ty][tx] === 0) {
+				if (ty === y2)
+					return true;
+				ty += step;
+			}
+			//check if the position we reached has a opposite color piece
+			if ((ty >= 0 && ty <= this.tableHeight) && this.table[ty][tx]*this.table[y1][x1] < 0)
+				if (ty === y2)
+					return true;
+
+			// Reset ty and reverse the step
+			ty = y1;
+			step = -1*step;
+		}
+	}
+	if (ty === y2) {
+		// Try left and right
+		let step = 1;
+		for (let i=0;i<2;i++)
+		{
+			tx += step;
+			while ((tx >= 0 && tx <= this.tableWidth) && this.table[ty][tx] === 0) {
+				if (tx === x2)
+					return true;
+				tx += step;
+			}
+			//check if the position we reached has a opposite color piece
+			if ((tx >= 0 && tx <= this.tableWidth) && this.table[ty][tx]*this.table[y1][x1] < 0)
+				if (tx === x2)
+					return true;
+
+			// Reset tx and reverse the step
+			tx = x1;
+			step = -1*step;
+		}
+	}
+
+	//couldnt find valid move
 	return false;
 }
 
