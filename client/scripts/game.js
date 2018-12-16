@@ -3,6 +3,21 @@ const CHAR_CODE_a = 97;
 const UNINITIALIZED = -1;
 const INITIALIZED = 0;
 
+var numberToName = {};
+numberToName[-1] = "black_king";
+numberToName[-2] = "black_queen";
+numberToName[-3] = "black_rook";
+numberToName[-4] = "black_bishop";
+numberToName[-5] = "black_knight";
+numberToName[-6] = "black_pawn";
+
+numberToName[1] = "white_king";
+numberToName[2] = "white_queen";
+numberToName[3] = "white_rook";
+numberToName[4] = "white_bishop";
+numberToName[5] = "white_knight";
+numberToName[6] = "white_pawn";
+
 var lobbyID = document.getElementById("lobbyID").textContent;
 var socket = new WebSocket("ws://"+window.location.host);
 socket.onopen = function(){socket.send(lobbyID);};
@@ -40,6 +55,14 @@ socket.onmessage = function(message){
 						selectedCell = this;
 					}
 				};
+
+				if (board.table[y][x] !== 0) {
+					let piece = document.createElement('div');
+					piece.className = "piece";
+					piece.setAttribute("id", numberToName[board.table[y][x]]);
+					cell.appendChild(piece);
+				}
+
 				boardDiv.appendChild(cell);
 			}
 			if (board.width%2 === 0) //padding to preserve checkboard pattern

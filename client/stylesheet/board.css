@@ -30,7 +30,7 @@
 	background-size: 312px 104px;
 }
 #white_bishop {
-	background: url(/chess_pieces.png) -104 0px;
+	background: url(/chess_pieces.png) -104px 0px;
 	background-size: 312px 104px;
 }
 #white_knight {
@@ -55,7 +55,7 @@
 	background-size: 312px 104px;
 }
 #black_bishop {
-	background: url(/chess_pieces.png) -104 -52px;
+	background: url(/chess_pieces.png) -104px -52px;
 	background-size: 312px 104px;
 }
 #black_knight {
