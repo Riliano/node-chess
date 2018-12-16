@@ -4,7 +4,7 @@ const UNINITIALIZED = -1;
 const INITIALIZED = 0;
 
 var lobbyID = document.getElementById("lobbyID").textContent;
-var socket = new WebSocket("ws://localhost:3320");
+var socket = new WebSocket("ws://"+window.location.host);
 socket.onopen = function(){socket.send(lobbyID);};
 
 let stat = UNINITIALIZED;
