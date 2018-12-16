@@ -1,4 +1,5 @@
 /* lobby.js - the backbone of the chess game */
+const CHAR_CODE_a = "a".charCodeAt(0); //*shrug*
 const TABLE_WIDTH = 8;
 const TABLE_HEIGHT = 8;
 const TABLE = [
@@ -80,6 +81,13 @@ lobby.prototype.checkMoveValidity = function(message, senderID) { //TODO
 	return true;
 }
 lobby.prototype.executeMove = function(move) {
+	let x1 = move.charCodeAt(0) - CHAR_CODE_a;
+	let y1 = this.tableHeight - parseInt(move.charAt(1));
+	let x2 = move.charCodeAt(2) - CHAR_CODE_a;
+	let y2 = this.tableHeight - parseInt(move.charAt(3));
+
+	this.table[y2][x2] = this.table[y1][x1];
+	this.table[y1][x1] = 0;
 
 	this.currentPlayerTurn = (this.currentPlayerTurn+1)%2;
 }
