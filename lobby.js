@@ -104,6 +104,9 @@ lobby.prototype.checkMoveValidity = function(move, senderID) { //TODO
 	if ((this.currentPlayerTurn === 0 && this.table[y1][x1] <= 0)
 	|| (this.currentPlayerTurn === 1 && this.table[y1][x1] >= 0))
 		return false;
+	// Check if the current player is trying to capture his own piece
+	if (this.table[y1][x1] * this.table[y2][x2] > 0)
+		return false;
 
 	switch (Math.abs(this.table[y1][x1])) {
 		case WHITE_PAWN: return this.checkPawn(x1, y1, x2, y2);
