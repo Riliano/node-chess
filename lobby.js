@@ -2,6 +2,21 @@
 const CHAR_CODE_a = "a".charCodeAt(0); //*shrug*
 const TABLE_WIDTH = 8;
 const TABLE_HEIGHT = 8;
+
+const BLACK_KING = -1;
+const BLACK_QUEEN = -2;
+const BLACK_ROOK = -3;
+const BLACK_BISHOP = -4;
+const BLACK_KNIGHT = -5;
+const BLACK_PAWN = -6;
+
+const WHITE_KING = 1;
+const WHITE_QUEEN = 2;
+const WHITE_ROOK = 3;
+const WHITE_BISHOP = 4;
+const WHITE_KNIGHT = 5;
+const WHITE_PAWN = 6;
+
 const TABLE = [
 				[-3,-5,-4,-2,-1,-4,-5,-3],
 				[-6,-6,-6,-6,-6,-6,-6,-6],
@@ -90,6 +105,10 @@ lobby.prototype.checkMoveValidity = function(move, senderID) { //TODO
 	|| (this.currentPlayerTurn === 1 && this.table[y1][x1] >= 0))
 		return false;
 
+	switch (Math.abs(this.table[y1][x1])) {
+		case WHITE_PAWN: return this.checkPawn(x1, y1, x2, y2);
+		default: break;
+	};
 
 	return true;
 }
@@ -104,6 +123,36 @@ lobby.prototype.executeMove = function(move) {
 
 	this.currentPlayerTurn = (this.currentPlayerTurn+1)%2;
 }
-//lobby.prototype.executeMessage = function (senderID, message) {};
+
+lobby.prototype.checkPawn = function (x1, y1, x2, y2) {
+	let step = this.table[y1][x1]/BLACK_PAWN; // If white == -1 if black == 1
+	let tx = x1, ty = y1+step;
+// Single move forward
+	if ((ty >= 0 && ty <= this.tableHeight) && this.table[ty][tx] === 0)
+		if (x2 == tx && y2 == ty)
+			return true;
+// Start move
+	ty = y1+2*step;
+	if (((step < 0 && y1 === 6) || (step > 0 && y1 === 1))
+	&& (this.table[ty][tx] === 0))
+		if (x2 == tx && y2 == ty)
+			return true;
+// Capture check
+	ty = y1+step;
+	tx = x1+1;
+	if (tx <= this.tableWidth
+	&& (this.table[y1][x1]*this.table[ty][tx] < 0)) // ensure the two cells have pieces from opposite colors
+		if (x2 === tx && y2 === ty)
+			return true;
+	tx = x1-1;
+	if (tx >= 0
+	&& (this.table[y1][x1]*this.table[ty][tx] < 0)) // ensure the two cells have pieces from opposite colors
+		if (x2 === tx && y2 === ty)
+			return true;
+	// TODO Check if the move will cause a check
+
+	// couldn't find a valid move
+	return false;
+}
 
 module.exports = lobby;
