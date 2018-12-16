@@ -70,6 +70,18 @@ socket.onmessage = function(message){
 		}
 		stat = INITIALIZED;
 	} else if (stat === INITIALIZED) {
-		console.log("Have to move: "+message.data);
+		let cell1 = message.data.substring(0, 2);
+		let cell2 = message.data.substring(2, 4);
+		console.log(cell1+cell2);
+		let source = document.getElementById(cell1);
+		let dest = document.getElementById(cell2);
+		if (!source.hasChildNodes()) {
+			console.log("Recived weird command from server");
+			return;
+		}
+
+		if (dest.hasChildNodes())
+			dest.removeChild(dest.childNodes[0]);
+		dest.appendChild(source.childNodes[0]);
 	}
 };

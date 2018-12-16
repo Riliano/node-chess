@@ -47,7 +47,7 @@
 }
 
 #black_king {
-	background: url(/chess_pieces.png) -52px 0px;
+	background: url(/chess_pieces.png) 0px -52px;
 	background-size: 312px 104px;
 }
 #black_queen {
