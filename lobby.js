@@ -134,7 +134,7 @@ lobby.prototype.checkPawn = function (x1, y1, x2, y2) {
 // Start move
 	ty = y1+2*step;
 	if (((step < 0 && y1 === 6) || (step > 0 && y1 === 1))
-	&& (this.table[ty][tx] === 0))
+	&& (this.table[ty][tx] === 0 && this.table[ty-step][tx] === 0))
 		if (x2 == tx && y2 == ty)
 			return true;
 // Capture check
