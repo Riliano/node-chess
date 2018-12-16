@@ -41,6 +41,12 @@ socket.onmessage = function(message){
 				cell.setAttribute("id", idStr);
 
 				cell.onclick = function(){
+					if (msg === idStr) { // Check if a cell is clicked twice and deselect it
+						msg = "";
+						selectedCell.style.opacity = 0.5; //default opacity
+						cell.style.opacity = 0.5;
+						return;
+					}
 					msg = msg + idStr;
 					if (msg.length === MV_MSG_LEN){
 						console.log("Trying to move: "+msg);
