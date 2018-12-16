@@ -1,4 +1,15 @@
 /* lobby.js - the backbone of the chess game */
+const TABLE_WIDTH = 8;
+const TABLE_HEIGHT = 8;
+const TABLE = [
+				[-3,-5,-4,-2,-1,-4,-5,-3],
+				[-6,-6,-6,-6,-6,-6,-6,-6],
+				[0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0],
+				[0, 0, 0, 0, 0, 0, 0, 0],
+				[ 6, 6, 6, 6, 6, 6, 6, 6],
+				[ 3, 5, 4, 2, 1, 4, 5, 3]];
 
 var lobby = function (myID)
 {
@@ -7,9 +18,9 @@ var lobby = function (myID)
 	this.nextClientID = 0;
 	//white is always position 0, black is position 1
 //	this.maxClientSize = 150;//replace with default constatns (implement in the future)
-	this.tableWidth = 8; //replace with default constatns
-	this.tableHeight = 8;//replace with default constatns
-	this.table = [[]];//replace with default constatns
+	this.tableWidth = TABLE_WIDTH;
+	this.tableHeight = TABLE_HEIGHT;
+	this.table = TABLE;
 	this.currentPlayerTurn = 0;
 };
 
