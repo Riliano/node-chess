@@ -61,7 +61,7 @@ lobby.prototype.checkMessageValidity = function(message) {
 	if (message.length !== 4)
 		return false;
 	let chars = message.split('');
-	let checkLetter = function(c){return 'a' <= c && c <= 'g';};
+	let checkLetter = function(c){return 'a' <= c && c <= 'h';};
 	let checkNumber = function(c){return '1' <= c && c <= '8';};
 	return checkLetter(chars[0])
 		&& checkNumber(chars[1])

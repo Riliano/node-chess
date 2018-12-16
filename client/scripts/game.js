@@ -33,6 +33,7 @@ socket.onmessage = function(message){
 							socket.send(msg);
 	
 						selectedCell.style.opacity = 0.5; //default opacity
+						cell.style.opacity = 0.5;
 						msg = "";
 					}else {
 						this.style.opacity = 0.95;
