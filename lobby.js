@@ -69,15 +69,28 @@ lobby.prototype.checkMessageValidity = function(message) {
 		&& checkLetter(chars[2])
 		&& checkNumber(chars[3]);
 }
-lobby.prototype.checkMoveValidity = function(message, senderID) { //TODO
+lobby.prototype.checkMoveValidity = function(move, senderID) { //TODO
 	// Check if there are two players
 	if (this.nextClientID < 2)
 		return false;
 	// Check if its the player's turn
 	if (this.currentPlayerTurn !== senderID)
 		return false;
-	if (!this.checkMessageValidity(message))
+	if (!this.checkMessageValidity(move))
 		return false
+
+	let x1 = move.charCodeAt(0) - CHAR_CODE_a;
+	let y1 = this.tableHeight - parseInt(move.charAt(1));
+	let x2 = move.charCodeAt(2) - CHAR_CODE_a;
+	let y2 = this.tableHeight - parseInt(move.charAt(3));
+
+	//Check if the current player can move the selected figure
+	//Also catches attempts to move an empty cell
+	if ((this.currentPlayerTurn === 0 && this.table[y1][x1] <= 0)
+	|| (this.currentPlayerTurn === 1 && this.table[y1][x1] >= 0))
+		return false;
+
+
 	return true;
 }
 lobby.prototype.executeMove = function(move) {
