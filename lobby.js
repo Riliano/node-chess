@@ -128,11 +128,35 @@ lobby.prototype.executeMove = function(move) {
 	this.currentPlayerTurn = (this.currentPlayerTurn+1)%2;
 }
 
+lobby.prototype.inBoard = function(x, y) {
+	return y >= 0 && y < this.tableHeight && x >= 0 && x < this.tableWidth;
+}
+lobby.prototype.oppositePieces = function(x1, y1, x2, y2) {
+	return this.table[y1][x1]*this.table[y2][x2] < 0;
+}
+
+lobby.prototype.checkLine = function(x1, y1, x2, y2, stepx, stepy) {
+	let tx = x1+stepx
+	let ty = y1+stepy;
+	while (this.inBoard(tx, ty) && this.table[ty][tx] === 0) {
+		console.log("looping");
+		if (ty === y2 && tx === x2)
+			return true;
+		tx += stepx;
+		ty += stepy;
+	}
+	if (this.inBoard(tx, ty) && this.oppositePieces(tx, ty, x1, y1))
+		if (ty === y2 && tx === x2)
+			return true;
+	return false;
+}
+
 lobby.prototype.checkPawn = function (x1, y1, x2, y2) {
 	let step = this.table[y1][x1]/BLACK_PAWN; // If white == -1 if black == 1
-	let tx = x1, ty = y1+step;
+	let tx = x1
+	let ty = y1+step;
 // Single move forward
-	if ((ty >= 0 && ty <= this.tableHeight) && this.table[ty][tx] === 0)
+	if (this.table[ty][tx] === 0)
 		if (x2 == tx && y2 == ty)
 			return true;
 // Start move
@@ -144,13 +168,11 @@ lobby.prototype.checkPawn = function (x1, y1, x2, y2) {
 // Capture check
 	ty = y1+step;
 	tx = x1+1;
-	if (tx <= this.tableWidth
-	&& (this.table[y1][x1]*this.table[ty][tx] < 0)) // ensure the two cells have pieces from opposite colors
+	if (this.oppositePieces(x1, y1, tx, ty))
 		if (x2 === tx && y2 === ty)
 			return true;
 	tx = x1-1;
-	if (tx >= 0
-	&& (this.table[y1][x1]*this.table[ty][tx] < 0)) // ensure the two cells have pieces from opposite colors
+	if (this.oppositePieces(x1, y1, tx, ty))
 		if (x2 === tx && y2 === ty)
 			return true;
 	// TODO Check if the move will cause a check
@@ -160,51 +182,15 @@ lobby.prototype.checkPawn = function (x1, y1, x2, y2) {
 }
 lobby.prototype.checkRook = function (x1, y1, x2, y2) {
 	let tx = x1, ty = y1;
-	if (tx === x2) {
-		// Try up and down
-		let step = 1;
-		for (let i=0;i<2;i++)
-		{
-			ty += step;
-			while ((ty >= 0 && ty <= this.tableHeight) && this.table[ty][tx] === 0) {
-				if (ty === y2)
-					return true;
-				ty += step;
-			}
-			//check if the position we reached has a opposite color piece
-			if ((ty >= 0 && ty <= this.tableHeight) && this.table[ty][tx]*this.table[y1][x1] < 0)
-				if (ty === y2)
-					return true;
+	console.log(x1, y1, x2, y2);
 
-			// Reset ty and reverse the step
-			ty = y1;
-			step = -1*step;
-		}
-	}
-	if (ty === y2) {
-		// Try left and right
-		let step = 1;
-		for (let i=0;i<2;i++)
-		{
-			tx += step;
-			while ((tx >= 0 && tx <= this.tableWidth) && this.table[ty][tx] === 0) {
-				if (tx === x2)
-					return true;
-				tx += step;
-			}
-			//check if the position we reached has a opposite color piece
-			if ((tx >= 0 && tx <= this.tableWidth) && this.table[ty][tx]*this.table[y1][x1] < 0)
-				if (tx === x2)
-					return true;
+	if (tx !== x2 && ty !== y2) // Not a + line
+		return false;
 
-			// Reset tx and reverse the step
-			tx = x1;
-			step = -1*step;
-		}
-	}
-
-	//couldnt find valid move
-	return false;
+	return this.checkLine(x1, y1, x2, y2, 0, 1)
+		|| this.checkLine(x1, y1, x2, y2, 0, -1)
+		|| this.checkLine(x1, y1, x2, y2, 1, 0)
+		|| this.checkLine(x1, y1, x2, y2, -1, 0);
 }
 
 module.exports = lobby;
