@@ -2,11 +2,25 @@
 <html>
 	<head>
 		<title>Creating lobby...</title>
+		<link rel="stylesheet" href="/stylesheet/global.css">
 	</head>
 	<body>
 		<main>
-			<h3> lobby ID: <%= id%> </h3>
+			<h3> Created lobby with ID: <%= id%> </h3> <br>
+			<button class="clickable" onclick="join()">Join lobby <%= id%></button>
+			<br>
+			<br>
+			<button class="clickable" onclick="home()">Return Home</button>
 		</main>
+	<script>
+		var join = function() {
+			window.location.href="/join/"+<%= id%>;
+		};
+		var home = function() {
+			window.location.href="/";
+		};
+	</script>
+
 	</body>
 
 </html>

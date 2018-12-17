@@ -1,7 +1,36 @@
 <!DOCTYPE HTML>
+<html>
 <head>
-	<title>Placeholder</title>
+	<title>Chess</title>
+	<link rel="stylesheet" href="/stylesheet/global.css">
 </head>
 <body>
-	<h3>PLACEHOLDER</h3>
+	<h3>Chess</h3>
+	<h4><i>A classic game of chess</i></h4>
+	<p>
+		Currently active lobbies: (number)<br>
+		Total games created: (number)
+	</p>
+	<br>
+	<button class="clickable" onclick="create()"> Create a new lobby</button>
+	<br>
+	<br>
+	<br>
+	<form onsubmit="return join()">
+		<input class="clickable" type="submit" value="Join existing lobby" />  
+		<input id = "joinForm" type="text" placeholder="Lobby id" />
+	</form>
+	<script>
+		var join = function() {
+			var response = document.getElementById('joinForm').value;
+			if (response === "")
+				return false;
+			window.location.href = "/join/"+response;
+			return false;
+		}
+		var create = function() {
+			window.location.href="/create";
+		}
+	</script>
 </body>
+</html>

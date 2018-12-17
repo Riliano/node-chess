@@ -2,11 +2,19 @@
 <html>
 	<head>
 		<title>Lobby not found</title>
+		<link rel="stylesheet" href="/stylesheet/global.css">
 	</head>
 	<body>
 		<main>
 			<h3> Could not find lobby with id: <%= id%> </h3>
+			<br>
+			<button class="clickable" onclick = "home()">Return home</button>
 		</main>
+		<script>
+			var home = function() {
+				window.location.href="/";
+			}
+		</script>
 	</body>
 
 </html>

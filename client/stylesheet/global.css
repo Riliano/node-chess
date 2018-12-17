@@ -1,0 +1,23 @@
+body{
+	margin:40px auto;
+	max-width:650px;
+	line-height:1.6;
+	font-size:18px;
+	color:#444;
+	padding:0 10px;
+	background-color:#EEEEEE;
+}
+.clickable{
+	height: 50px;
+	width: 150px;
+	margin-right: 40px;
+	background: silver;
+	opacity: 0.6;
+	border: 0;
+}
+.clickable:hover{
+	opacity: 0.9;
+}
+h1,h2,h3,h4,h5{
+	line-height:1.2
+}

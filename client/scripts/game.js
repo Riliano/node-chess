@@ -32,6 +32,12 @@ socket.onmessage = function(message){
 	if (stat === UNINITIALIZED) {
 		board = JSON.parse(message.data);
 		boardDiv.style.width = (board.width+1)*50 + "px";
+		let header = document.getElementById("header");
+		switch (board.role) {
+			case "WHTE": header.appendChild(document.createTextNode("You are playing as white"));break;
+			case "BLCK": header.appendChild(document.createTextNode("You are playing as black"));break;
+			case "SPEC": header.appendChild(document.createTextNode("You are a spectator"));break;
+		};
 
 		for (let y = 0; y < board.height; y++) {
 			for (let x=0; x < board.width; x++) {
