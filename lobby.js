@@ -114,6 +114,7 @@ lobby.prototype.checkMoveValidity = function(move, senderID) { //TODO
 		case WHITE_BISHOP: return this.checkBishop(x1, y1, x2, y2);
 		case WHITE_QUEEN: return this.checkQueen(x1, y1, x2, y2);
 		case WHITE_KNIGHT: return this.checkKnight(x1, y1, x2, y2);
+		case WHITE_KING: return this.checkKing(x1, y1, x2, y2);
 		default: break;
 	};
 
@@ -247,6 +248,23 @@ lobby.prototype.checkKnight = function (x1, y1, x2, y2) {
 
 	// couldn't find a valid move
 	return false;
+}
+lobby.prototype.checkKing = function (x1, y1, x2, y2) {
+	for (let stepy=-1;stepy<=1;stepy++) {
+		for (let stepx=-1;stepx<=1;stepx++) {
+			if (stepx === 0 && stepy === 0)
+				stepx++;
+			let tx = x1+stepx;
+			let ty = y1+stepy;
+			if (this.inBoard(tx, ty)
+			&& (this.oppositePieces(x1, y1, tx, ty) || this.table[ty][tx] === 0)) {
+				if (ty === y2 && tx === x2)
+					return true;
+				}
+		}
+	}
+	return false;
+
 }
 
 module.exports = lobby;
