@@ -113,6 +113,7 @@ lobby.prototype.checkMoveValidity = function(move, senderID) { //TODO
 		case WHITE_ROOK: return this.checkRook(x1, y1, x2, y2);
 		case WHITE_BISHOP: return this.checkBishop(x1, y1, x2, y2);
 		case WHITE_QUEEN: return this.checkQueen(x1, y1, x2, y2);
+		case WHITE_KNIGHT: return this.checkKnight(x1, y1, x2, y2);
 		default: break;
 	};
 
@@ -221,6 +222,31 @@ lobby.prototype.checkQueen = function (x1, y1, x2, y2) {
 		|| this.checkLine(x1, y1, x2, y2, 0, -1)
 		|| this.checkLine(x1, y1, x2, y2, 1, 0)
 		|| this.checkLine(x1, y1, x2, y2, -1, 0);
+}
+lobby.prototype.checkKnight = function (x1, y1, x2, y2) {
+	console.log(x1, y1, x2, y2);
+	let possiblyValidMoves = [
+		[x1+1, y1+2],
+		[x1-1, y1+2],
+		[x1+1, y1-2],
+		[x1-1, y1-2],
+		[x1+2, y1+1],
+		[x1+2, y1-1],
+		[x1-2, y1+1],
+		[x1-2, y1-1]];
+
+	for (let i=0;i<possiblyValidMoves.length;i++) {
+		let tx = possiblyValidMoves[i][0];
+		let ty = possiblyValidMoves[i][1];
+		if (this.inBoard(tx, ty)
+		&& (this.oppositePieces(x1, y1, tx, ty) || this.table[ty][tx] === 0)) {
+			if (ty === y2 && tx === x2)
+				return true;
+		}
+	}
+
+	// couldn't find a valid move
+	return false;
 }
 
 module.exports = lobby;
