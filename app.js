@@ -5,7 +5,7 @@ var ws = require("ws");
 
 var lobby = require("./lobby");
 
-var port = process.argv[2];
+var port = process.env.PORT || 3320;//process.argv[2];
 
 var app = express();
 app.set("view engine", "ejs");
