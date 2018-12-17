@@ -4,7 +4,8 @@
   "description": "A simple game of chess written in nodejs",
   "main": "index.js",
   "scripts": {
-    "start": "node app.js 3320"
+    "start": "node app.js 80"
+    "play": "node app.js 3320"
   },
   "author": "L. Nenovski",
   "license": "ISC",
