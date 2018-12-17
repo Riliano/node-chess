@@ -44,7 +44,7 @@ app.get("/join/:id", function (req, res) {
 });
 
 app.get("/", function (req, res) {
-	res.render("index.html");
+	res.render("index.ejs", {total: nextLobbyID, active: allLobbys.size});
 	console.log("Sending a response");
 });
 
@@ -83,6 +83,8 @@ wss.on("connection", function (socket) {
 		console.log("close code from "+lobbyID+"@"+clientID+": "+code);
 		if (code == "1001" && stat !== -1) {
 			localLobby.removeClient(clientID);
+			if (localLobby.getLobbySize() === 0)
+				allLobbys.delete(lobbyID);
 		}
 		stat = -1;
 	});
